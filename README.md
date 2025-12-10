@@ -25,12 +25,13 @@ Screenshot:
 
 ---
 
-### £ per Minute – £30k/month Pace
+### $ / £ per Minute – $30k or £30k/month Pace
 
-Shows how much you’ve “earned” today if you were making **£1 per minute** (~£1,440/day, ~£30k/month).
+Shows how much you’ve “earned” today if you were making **$1 or £1 per minute** (~$1,440 or £1,440/day, ~$30k or £30k/month).
 
-Script:
+Scripts:
 
+- `$-per-minute-$30k-per-month`
 - `£-per-minute-£30k`
 
 Screenshot:
