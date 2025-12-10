@@ -1,0 +1,89 @@
+// Define your date of birth and life expectancy
+const DOB = new Date("2005-04-11"); // Replace with your date of birth
+const LIFE_EXPECTANCY = 70; // Life expectancy in years
+
+// Helper function to calculate percentage
+function calculatePercentage(start, end) {
+  const now = new Date();
+  return Math.min(((now - start) / (end - start)) * 100, 100);
+}
+
+// Get current date details
+const now = new Date();
+const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+const startOfWeek = new Date(now);
+startOfWeek.setDate(now.getDate() - now.getDay());
+const endOfWeek = new Date(startOfWeek);
+endOfWeek.setDate(startOfWeek.getDate() + 7);
+const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+const startOfYear = new Date(now.getFullYear(), 0, 1);
+const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+
+// Calculate life expectancy range
+const lifeEnd = new Date(DOB.getFullYear() + LIFE_EXPECTANCY, DOB.getMonth(), DOB.getDate());
+
+// Calculate percentages
+const percentages = {
+  "Day": calculatePercentage(startOfDay, endOfDay),
+  "Week": calculatePercentage(startOfWeek, endOfWeek),
+  "Year": calculatePercentage(startOfYear, endOfYear),
+  "Life": calculatePercentage(DOB, lifeEnd),
+};
+
+// Colors for progress bars
+const colors = [
+  new Color("#FF5733"), // Red-Orange
+  new Color("#33FF57"), // Green
+  new Color("#3357FF"), // Blue
+  new Color("#FFA533"), // Orange
+  new Color("#A533FF"), // Purple
+];
+
+// Create widget
+const widget = new ListWidget();
+widget.backgroundColor = new Color("#1A1A1A");
+
+// Add percentages with progress bars
+let i = 0;
+for (const [label, value] of Object.entries(percentages)) {
+  // Label
+  const stack = widget.addStack();
+  const labelText = stack.addText(label + ": ");
+  labelText.font = Font.semiboldSystemFont(14);
+  labelText.textColor = Color.white();
+  stack.addSpacer();
+
+  const percentageText = stack.addText(value.toFixed(2) + "%");
+  percentageText.font = Font.semiboldSystemFont(14);
+  percentageText.textColor = colors[i];
+
+  widget.addSpacer(3);
+
+  // Progress bar
+  const progressStack = widget.addStack();
+  progressStack.size = new Size(0, 4);
+  progressStack.cornerRadius = 2;
+
+  const progress = progressStack.addStack();
+  progress.size = new Size((value / 100) * 300, 4); // Adjust width as needed
+  progress.backgroundColor = colors[i];
+
+  progressStack.addSpacer(); // Remaining space for the bar background
+
+  widget.addSpacer(6);
+  i++;
+}
+
+// Refresh every minute
+widget.refreshAfterDate = new Date(Date.now() + 60 * 1000);
+
+// Preview the widget
+if (config.runsInWidget) {
+  Script.setWidget(widget);
+} else {
+  widget.presentMedium();
+}
+
+Script.complete();
