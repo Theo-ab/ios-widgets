@@ -1,0 +1,84 @@
+// === CONFIG ===
+const RATE_PER_MIN = 1;              // $ per minute (widget param optional below)
+const BAR_WIDTH = 300;               // Adjust if clipping
+const GOAL_TEXT = "$30k/mo";         // Display only (lesson vibe)
+
+// Optional: override rate via widget parameter (e.g., "2" for $2/min)
+const param = args && args.widgetParameter ? String(args.widgetParameter).trim() : "";
+const rate = (!isNaN(parseFloat(param)) && isFinite(parseFloat(param))) ? parseFloat(param) : RATE_PER_MIN;
+
+// === TIME ===
+const now = new Date();
+const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const minutesSinceMidnight = Math.floor((now - startOfDay) / 60000);   // 0..1439
+const value = minutesSinceMidnight * rate;
+const percentDay = (minutesSinceMidnight / 1440) * 100;
+
+// 12h clock with am/pm
+function pad(n){ return n.toString().padStart(2,"0"); }
+const h24 = now.getHours();
+const h12 = (h24 % 12) === 0 ? 12 : (h24 % 12);
+const ampm = h24 >= 12 ? "pm" : "am";
+const time12 = `${h12}:${pad(now.getMinutes())} ${ampm}`;
+
+// === COLORS / STYLE (match your “Hours Left” look) ===
+// Use system default text color; gray for secondary elements
+const SEC = Color.gray();
+
+// === HELPERS ===
+function fmt(n){
+  try { return new Intl.NumberFormat("en-GB").format(Math.floor(n)); }
+  catch (e) { return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+}
+const dayEq = rate * 1440;  // $/day from rate
+
+// === WIDGET ===
+const widget = new ListWidget();
+widget.addSpacer(8);
+
+// TIME (small, centered)
+const timeLine = widget.addText(time12);
+timeLine.font = Font.boldSystemFont(14);      // matches your compact title size
+timeLine.centerAlignText();
+timeLine.textColor = SEC;
+
+widget.addSpacer(5);
+
+// BIG $ VALUE (centered)
+const main = widget.addText(`$${fmt(value)}`);
+main.font = Font.systemFont(38);
+main.centerAlignText();
+
+// Tiny equivalence line (centered, subtle)
+widget.addSpacer(4);
+const eq = widget.addText(`$${fmt(rate)}/min • $${fmt(dayEq)}/day • ${GOAL_TEXT}`);
+eq.font = Font.systemFont(10);
+eq.textColor = SEC;
+eq.centerAlignText();
+
+widget.addSpacer(6);
+
+// PROGRESS BAR (thin, neutral gray)
+const barStack = widget.addStack();
+barStack.centerAlignContent(); // centers children in available width
+barStack.addSpacer();
+const track = barStack.addStack();
+track.size = new Size(BAR_WIDTH, 4);
+track.cornerRadius = 2;
+track.backgroundColor = new Color("#2C2C2E"); // subtle track (works in light/dark)
+const fill = track.addStack();
+fill.size = new Size(Math.max(2, (percentDay / 100) * BAR_WIDTH), 4);
+fill.backgroundColor = SEC; // gray fill
+barStack.addSpacer();
+
+// Refresh on the next minute tick (best effort within iOS limits)
+const msToNextMinute = (60 - now.getSeconds()) * 1000 + 50;
+widget.refreshAfterDate = new Date(now.getTime() + msToNextMinute);
+
+// Present
+if (config.runsInWidget) {
+  Script.setWidget(widget);
+} else {
+  widget.presentMedium(); // small widget to match the vibe; change to presentMedium() if desired
+}
+Script.complete();
