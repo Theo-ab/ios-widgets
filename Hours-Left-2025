@@ -1,0 +1,46 @@
+// Scriptable: Widget for Remaining Hours in 2025 
+
+// Get current date and time
+let now = new Date();
+
+// Set the target to December 31, 2025, at 23:59:59
+let endOfYear = new Date('2025-12-31T23:59:59');
+
+// Calculate the difference in milliseconds
+let difference = endOfYear - now;
+
+// Convert milliseconds to hours
+let remainingHours = Math.floor(difference / (1000 * 60 * 60));
+
+// Create the widget
+let widget = new ListWidget();
+widget.addSpacer(8);
+
+// Widget title (smaller for compact fit)
+let title = widget.addText("Hours Left");
+title.font = Font.boldSystemFont(14);
+title.centerAlignText();
+widget.addSpacer(5);
+
+// Display the remaining hours (large focus)
+let hoursText = widget.addText(`${remainingHours}`);
+hoursText.font = Font.systemFont(38);
+hoursText.centerAlignText();
+
+// Footer (optional, subtle)
+widget.addSpacer(5);
+let footer = widget.addText("2025 Countdown");
+footer.font = Font.systemFont(10);
+footer.textColor = Color.gray();
+footer.centerAlignText();
+
+// Refresh the widget every hour
+widget.refreshAfterDate = new Date(Date.now() + 1000 * 60 * 60);
+
+// Present the widget (for testing)
+if (config.runsInWidget) {
+  Script.setWidget(widget);
+} else {
+  widget.presentSmall();
+}
+Script.complete();
