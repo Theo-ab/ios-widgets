@@ -1,5 +1,5 @@
 // Define your date of birth and life expectancy
-const DOB = new Date("2005-04-11"); // Replace with your date of birth
+const DOB = new Date("yyyy-mm-dd"); // Replace with your date of birth
 const LIFE_EXPECTANCY = 70; // Life expectancy in years
 
 // Helper function to calculate percentage
