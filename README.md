@@ -71,4 +71,4 @@ Screenshot:
 
 ## License
 
-Do whatever you want with these scripts. If you ship something cool with them, credit is appreciated but not required.
+Do whatever you want with these scripts. Free to download, use, modify and sell.
