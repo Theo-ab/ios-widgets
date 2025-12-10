@@ -21,7 +21,7 @@ Scripts:
 
 Screenshot:
 
-![Hours left widgets](images/IMG_4191.jpeg)
+![Hours left widgets](Images/IMG_4191.jpeg)
 
 ---
 
@@ -35,7 +35,7 @@ Script:
 
 Screenshot:
 
-![£ per minute widget](images/IMG_4192.jpeg)
+![£ per minute widget](Images/IMG_4192.jpeg)
 
 ---
 
@@ -49,7 +49,7 @@ Script:
 
 Screenshot:
 
-![Life left percentage widget](images/IMG_4193.jpeg)
+![Life left percentage widget](Images/IMG_4193.jpeg)
 
 ---
 
